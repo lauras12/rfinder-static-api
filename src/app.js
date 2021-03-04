@@ -1,32 +1,33 @@
-require('dotenv').config();
-const express = require('express');
-const morgan = require('morgan');
-const cors = require('cors');
-const helmet = require('helmet');
-const { NODE_ENV } = require('./config');
-const app = express();
-const morganOption = (NODE_ENV === 'production') ? 'tiny' : 'common';
-const proxy = require('./proxy');
+const axios = require('axios')
 
 
-app.use(morgan(morganOption));
-app.use(helmet());
-app.use(cors());
-app.use('/api.yelp.com/v3/businesses/search?', proxy)
+module.exports = (req, res) => {
+    const { term, location } = req.query;
+    console.log(term, location, 'WORKING?????')
 
-app.get('/', (req, res) => {
-    res.json('hello from green thumbs up!')
-});
-
-app.use(function errorHandler(error, req, res, next) {
-    let response;
-    if (NODE_ENV === 'production') {
-        response = { error: { message: 'server error' } }
-    } else {
-        console.error(error)
-        response = { message: error.message, error }
-    }
-    res.status(500).json(response)
-})
-
-module.exports = app;
+    const headers = {
+        "Access-Control-Allow-Headers": "Content-Type, Accept",
+        'Access-Control-Allow-Origin': "*",
+        'Access-Control-Allow-Methods': "GET,HEAD"
+    };
+    axios({
+        method: 'get',
+        url: `https://api.yelp.com/v3/businesses/search?term=${term}&location=${location}`,
+        headers: {
+            'Authorization': 'bearer 1tfAV3b5KfUH3KiLwe1QijAOWvXaHKRhdUC04jlCt9nWMg-ZjenkkvwU-5_O-GSJ5_k6sMarkh0RPO8e01kNrQcuTgHtr7LHyeQeSWzcmT9Xgfs9XLt3rk62boE4XnYx',
+        },
+        responseType: 'stream'
+    })
+        .then(response => {
+            if (response.status === 200) {
+                res.writeHead(200, {
+                    ...headers, 'Content-Type': response.headers['content-type']
+                });
+                response.data.pipe(res);
+            } else {
+                res.writeHead(response.status);
+                res.end();
+            }
+        })
+        .catch(res.error)
+};
