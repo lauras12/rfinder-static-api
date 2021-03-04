@@ -2,7 +2,7 @@ const axios = require('axios')
 
 
 module.exports = (req, res) => {
-    console.log('GETTING HERE???????')
+    console.log('GETTING HERE??')
   const headers = {
     "Access-Control-Allow-Headers": "Content-Type, Accept",
     'Access-Control-Allow-Origin': "*",
@@ -12,7 +12,7 @@ module.exports = (req, res) => {
     method: 'get',
     url: 'https://api.yelp.com/v3/businesses/search?',
     headers: {
-      'Authorization': 'bearer 1tfAV3b5KfUH3KiLwe1QijAOWvXaHKRhdUC04jlCt9nWMg-ZjenkkvwU-5_O-GSJ5_k6sMarkh0RPO8e01kNrQcuTgHtr7LHyeQeSWzcmT9Xgfs9XLt3rk62boE4XnYx',
+      'Authorization': 'bearer pCzcyRwsJ4cqsP9asMZ7VJJbBSrzy_CNLLUX0hUyj26uAZ3_5NcJMLC-DtJt1il1FT1WlosQ-mEopYjyLJWvYFmPXrVpIbGazzY_OP_XPATgB5kbd9tgNy6RJKw_YHYx',
     },
     responseType: 'stream'
   })
