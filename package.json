@@ -1,5 +1,5 @@
 {
-  "name": "rfinder-static=api",
+  "name": "rfinder-static-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,11 +14,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "helmet": "^3.15.0",
-    "morgan": "^1.9.1"
+    "knex": "^0.95.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.5.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
