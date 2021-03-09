@@ -1,33 +1,32 @@
-const axios = require('axios')
+require('dotenv').config();
+const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
+const helmet = require('helmet');
+const { NODE_ENV } = require('./config');
+const app = express();
+const morganOption = (NODE_ENV === 'production') ? 'tiny' : 'common';
+const proxy = require('./proxy');
 
 
-module.exports = (req, res) => {
-    const { term, location } = req.query;
-    console.log(term, location, 'WORKING?????')
+app.use(morgan(morganOption));
+app.use(helmet());
+app.use(cors());
+app.use(proxy)
 
-    const headers = {
-        "Access-Control-Allow-Headers": "Content-Type, Accept",
-        'Access-Control-Allow-Origin': "*",
-        'Access-Control-Allow-Methods': "GET,HEAD"
-    };
-    axios({
-        method: 'get',
-        url: `https://api.yelp.com/v3/businesses/search?term=${term}&location=${location}`,
-        headers: {
-            'Authorization': 'bearer pCzcyRwsJ4cqsP9asMZ7VJJbBSrzy_CNLLUX0hUyj26uAZ3_5NcJMLC-DtJt1il1FT1WlosQ-mEopYjyLJWvYFmPXrVpIbGazzY_OP_XPATgB5kbd9tgNy6RJKw_YHYx',
-        },
-        responseType: 'stream'
-    })
-        .then(response => {
-            if (response.status === 200) {
-                res.writeHead(200, {
-                    ...headers, 'Content-Type': response.headers['content-type']
-                });
-                response.data.pipe(res);
-            } else {
-                res.writeHead(response.status);
-                res.end();
-            }
-        })
-        .catch(res.error)
-};
+app.get('/', (req, res) => {
+    res.json('hello from green thumbs up!')
+});
+
+app.use(function errorHandler(error, req, res, next) {
+    let response;
+    if (NODE_ENV === 'production') {
+        response = { error: { message: 'server error' } }
+    } else {
+        console.error(error)
+        response = { message: error.message, error }
+    }
+    res.status(500).json(response)
+})
+
+module.exports = app;
