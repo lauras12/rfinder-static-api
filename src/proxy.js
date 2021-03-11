@@ -3,7 +3,7 @@ const axios = require('axios')
 
 module.exports = (req, res) => {
     const { term, location } = req.query;
-    console.log(term, location, 'WORKING?????')
+    console.log(term, location, 'its working')
 
     const headers = {
         "Access-Control-Allow-Headers": "Content-Type, Accept",
