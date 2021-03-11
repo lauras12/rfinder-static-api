@@ -14,7 +14,7 @@ app.use(cors());
 app.use(proxy)
 
 app.get('/', (req, res) => {
-    res.json('hello from green thumbs up!')
+    res.json('hello from restaurant finder!')
 });
 
 app.use(function errorHandler(error, req, res, next) {
